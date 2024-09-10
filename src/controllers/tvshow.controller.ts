@@ -13,9 +13,9 @@ export const getAllTVShows = async (req: Request, res: Response) => {
         .json({ error: 'Search query is required and cannot be empty' });
     }
 
-    const movies = await getTVShows(searchQuery);
+    const data = await getTVShows(searchQuery);
 
-    return res.json({ data: movies });
+    return res.json({ data });
   } catch (error) {
     return res.status(500).json({ error: 'Failed to fetch TV Shows' });
   }
@@ -33,11 +33,9 @@ export const getTVShow = async (req: Request, res: Response) => {
   }
 
   try {
-    const movie = await getTVShowById(numericId);
-    if (!movie) {
-      return res.status(404).json({ error: 'TV Show not found' });
-    }
-    return res.json({ data: movie });
+    const data = await getTVShowById(numericId);
+
+    return res.json({ data });
   } catch (error) {
     return res.status(500).json({ error: 'Failed to fetch TV Show' });
   }
