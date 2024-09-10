@@ -11,7 +11,7 @@
   "author": "Gabriel Badarau",
   "license": "MIT",
   "dependencies": {
-    "@animelist/client": "^0.1.0",
+    "@shineiichijo/marika": "^3.0.1",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "moviedb-promise": "^4.0.7"

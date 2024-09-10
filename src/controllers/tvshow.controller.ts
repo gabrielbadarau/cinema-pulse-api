@@ -15,7 +15,7 @@ export const getAllTVShows = async (req: Request, res: Response) => {
 
     const data = await getTVShows(searchQuery);
 
-    return res.json({ data });
+    return res.json({ data: data.results });
   } catch (error) {
     return res.status(500).json({ error: 'Failed to fetch TV Shows' });
   }

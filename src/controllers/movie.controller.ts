@@ -15,7 +15,7 @@ export const getAllMovies = async (req: Request, res: Response) => {
 
     const data = await getMovies(searchQuery);
 
-    return res.json({ data });
+    return res.json({ data: data.results });
   } catch (error) {
     return res.status(500).json({ error: 'Failed to fetch movies' });
   }

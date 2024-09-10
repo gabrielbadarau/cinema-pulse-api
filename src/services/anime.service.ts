@@ -2,7 +2,7 @@ import { malClient } from '../config/malClient';
 
 export const getAnimes = async (searchQuery: string) => {
   try {
-    return await malClient.getAnimeList({ q: searchQuery });
+    return await malClient.getAnimeSearch({ q: searchQuery });
   } catch (error) {
     throw new Error('Error fetching animes');
   }
@@ -10,7 +10,7 @@ export const getAnimes = async (searchQuery: string) => {
 
 export const getAnimeById = async (id: number) => {
   try {
-    return await malClient.getAnimeDetails(id);
+    return await malClient.getAnimeById(id);
   } catch (error) {
     throw new Error('Error fetching anime');
   }
