@@ -10,7 +10,7 @@ export const getMovies = async (searchQuery: string) => {
 
 export const getMovieById = async (id: number) => {
   try {
-    return await movieDBClient.movieInfo({ id: id });
+    return await movieDBClient.movieInfo({ id });
   } catch (error) {
     throw new Error('Error fetching movie');
   }

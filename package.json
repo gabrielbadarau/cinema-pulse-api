@@ -11,17 +11,21 @@
   "author": "Gabriel Badarau",
   "license": "MIT",
   "dependencies": {
+    "@prisma/client": "^6.2.1",
     "@shineiichijo/marika": "^3.0.1",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
     "moviedb-promise": "^4.0.7"
   },
   "devDependencies": {
     "@types/express": "^4.17.21",
-    "@types/node": "^22.5.4",
+    "@types/node": "^22.10.5",
     "nodemon": "^3.1.4",
     "prettier": "3.3.3",
+    "prisma": "^6.2.1",
     "ts-node": "^10.9.2",
-    "typescript": "^5.5.4"
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3"
   }
 }
