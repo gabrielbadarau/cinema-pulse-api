@@ -5,11 +5,14 @@ import movieRoute from './routes/movie.routes';
 import tvshowRoute from './routes/tvshow.routes';
 import animeRoute from './routes/anime.routes';
 import authRoute from './routes/auth.routes';
+import { applyJsonMiddleware } from './middlewares/jsonMiddleware';
 
 dotenv.config();
 
 const port = process.env.PORT || 3000;
 const app = express();
+
+applyJsonMiddleware(app);
 
 app.use('/api/movies', movieRoute);
 app.use('/api/tvshows', tvshowRoute);
