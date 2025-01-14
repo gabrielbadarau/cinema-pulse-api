@@ -2,6 +2,14 @@ import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 
 import { checkExistingUser, createNewUser } from '../services/user.service';
+import {
+  deleteExpiredRefreshTokens,
+  deleteRefreshToken,
+  generateAccessToken,
+  generateRefreshToken,
+  getRefreshToken,
+  verifyRefreshToken,
+} from '../services/token.service';
 
 export const register = async (req: Request, res: Response) => {
   if (!req.body) {
@@ -36,8 +44,82 @@ export const register = async (req: Request, res: Response) => {
   }
 };
 
-export const login = async (req: Request, res: Response) => {};
+export const login = async (req: Request, res: Response) => {
+  const { email, password } = req.body;
 
-export const logout = async (req: Request, res: Response) => {};
+  if (!email || !password) {
+    return res.status(400).json({ error: 'Email and password are required' });
+  }
 
-export const refreshToken = async (req: Request, res: Response) => {};
+  try {
+    const user = await checkExistingUser(email);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ error: 'Invalid password' });
+    }
+
+    // Delete expired refresh tokens for the user
+    const deleteResult = await deleteExpiredRefreshTokens(user.id);
+    console.log(
+      `${deleteResult.count} expired tokens deleted for user id ${user.id} (name ${user.name})`
+    );
+
+    const accessToken = generateAccessToken(user.id);
+    const refreshToken = await generateRefreshToken(user.id);
+
+    res.json({ accessToken, refreshToken });
+  } catch (error) {
+    console.error('Login error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+export const logout = async (req: Request, res: Response) => {
+  const { token } = req.body;
+
+  if (!token) {
+    return res.status(400).json({ error: 'Refresh token is required' });
+  }
+
+  try {
+    const existingToken = await getRefreshToken(token);
+
+    if (!existingToken) {
+      return res.status(404).json({ error: 'Refresh token not found' });
+    }
+
+    await deleteRefreshToken(token);
+
+    res.status(200).json({ message: 'Logged out successfully' });
+  } catch (error) {
+    console.error('Error during logout:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+export const refreshToken = async (req: Request, res: Response) => {
+  const { token } = req.body;
+
+  if (!token) {
+    return res.status(400).json({ error: 'Refresh token is required' });
+  }
+
+  try {
+    const payload = await verifyRefreshToken(token);
+    if (!payload) {
+      return res
+        .status(403)
+        .json({ error: 'Invalid or expired refresh token' });
+    }
+
+    const accessToken = generateAccessToken((payload as any).userId);
+    res.json({ accessToken });
+  } catch (error) {
+    console.error('Refresh token error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};

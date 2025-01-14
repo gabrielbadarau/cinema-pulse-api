@@ -5,7 +5,8 @@ import movieRoute from './routes/movie.routes';
 import tvshowRoute from './routes/tvshow.routes';
 import animeRoute from './routes/anime.routes';
 import authRoute from './routes/auth.routes';
-import { applyJsonMiddleware } from './middlewares/jsonMiddleware';
+import { applyJsonMiddleware } from './middlewares/json.middleware';
+import { authenticate } from './middlewares/auth.middleware';
 
 dotenv.config();
 
@@ -14,9 +15,9 @@ const app = express();
 
 applyJsonMiddleware(app);
 
-app.use('/api/movies', movieRoute);
-app.use('/api/tvshows', tvshowRoute);
-app.use('/api/animes', animeRoute);
+app.use('/api/movies', authenticate, movieRoute);
+app.use('/api/tvshows', authenticate, tvshowRoute);
+app.use('/api/animes', authenticate, animeRoute);
 app.use('/api/auth', authRoute);
 
 app.listen(port, () => {
