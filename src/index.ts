@@ -7,6 +7,7 @@ import animeRoute from './routes/anime.routes';
 import authRoute from './routes/auth.routes';
 import { applyJsonMiddleware } from './middlewares/json.middleware';
 import { authenticate } from './middlewares/auth.middleware';
+import { applyCorsMiddleware } from './middlewares/cors.middleware';
 
 dotenv.config();
 
@@ -14,6 +15,7 @@ const port = process.env.PORT || 3000;
 const app = express();
 
 applyJsonMiddleware(app);
+applyCorsMiddleware(app);
 
 app.use('/api/movies', authenticate, movieRoute);
 app.use('/api/tvshows', authenticate, tvshowRoute);
