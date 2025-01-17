@@ -8,6 +8,7 @@ import authRoute from './routes/auth.routes';
 import { applyJsonMiddleware } from './middlewares/json.middleware';
 import { authenticate } from './middlewares/auth.middleware';
 import { applyCorsMiddleware } from './middlewares/cors.middleware';
+import { applyCookieMiddleware } from './middlewares/cookie.middleware';
 
 dotenv.config();
 
@@ -16,6 +17,7 @@ const app = express();
 
 applyJsonMiddleware(app);
 applyCorsMiddleware(app);
+applyCookieMiddleware(app);
 
 app.use('/api/movies', authenticate, movieRoute);
 app.use('/api/tvshows', authenticate, tvshowRoute);

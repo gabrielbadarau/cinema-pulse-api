@@ -87,21 +87,28 @@ export const login = async (req: Request, res: Response) => {
 };
 
 export const logout = async (req: Request, res: Response) => {
-  const { token } = req.body;
+  const refreshToken = req.cookies['refreshToken_cinema_pulse_api'];
 
-  if (!token) {
-    return res.status(400).json({ error: 'Refresh token is required' });
+  if (!refreshToken) {
+    return res
+      .status(400)
+      .json({ message: 'No refresh token found in cookies' });
   }
 
   try {
-    const existingToken = await getRefreshToken(token);
+    const existingToken = await getRefreshToken(refreshToken);
 
     if (!existingToken) {
       return res.status(404).json({ error: 'Refresh token not found' });
     }
 
-    await deleteRefreshToken(token);
+    await deleteRefreshToken(refreshToken);
 
+    res.clearCookie('refreshToken_cinema_pulse_api', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    });
     res.status(200).json({ message: 'Logged out successfully' });
   } catch (error) {
     console.error('Error during logout:', error);
