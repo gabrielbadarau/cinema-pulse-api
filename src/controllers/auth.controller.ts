@@ -71,7 +71,15 @@ export const login = async (req: Request, res: Response) => {
     const accessToken = generateAccessToken(user.id);
     const refreshToken = await generateRefreshToken(user.id);
 
-    res.json({ accessToken, refreshToken });
+    res.cookie('refreshToken_cinema_pulse_api', refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      path: '/',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    res.json({ accessToken });
   } catch (error) {
     console.error('Login error:', error);
     res.status(500).json({ error: 'Internal server error' });
