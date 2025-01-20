@@ -117,14 +117,14 @@ export const logout = async (req: Request, res: Response) => {
 };
 
 export const refreshToken = async (req: Request, res: Response) => {
-  const { token } = req.body;
+  const refreshToken = req.cookies['refreshToken_cinema_pulse_api'];
 
-  if (!token) {
+  if (!refreshToken) {
     return res.status(400).json({ error: 'Refresh token is required' });
   }
 
   try {
-    const payload = await verifyRefreshToken(token);
+    const payload = await verifyRefreshToken(refreshToken);
     if (!payload) {
       return res
         .status(403)
