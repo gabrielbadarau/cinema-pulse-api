@@ -8,6 +8,6 @@ A Node.js (Express) server for cinema-pulse-api
 - created an authenthication layer based on JWT (access token and refresh token system)
 - integrated Prisma ORM over Supabase database
 - refresh tokens are stored in the database
-- maybe I will switch to HTTP cookies later when I will implement a frontend to consume this server
+- it uses HTTP cookies for authenthication (refresh token)
 
 
